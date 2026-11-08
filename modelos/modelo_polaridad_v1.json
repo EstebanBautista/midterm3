@@ -1,0 +1,26 @@
+{
+  "version": "v1",
+  "representacion": "Híbrido",
+  "modelo": "Logistic Regression",
+  "parametros": {
+    "clf__C": "1"
+  },
+  "macro_f1_cv": 0.7113,
+  "macro_f1_test": 0.714,
+  "accuracy_test": 0.7177,
+  "n_train": 493,
+  "n_test": 124,
+  "clases": [
+    "negativo",
+    "neutral",
+    "positivo"
+  ],
+  "dataset": [
+    "feedback_curso_universitario.csv",
+    "feedback_curso_universitario2.csv",
+    "feedback_curso_universitario3.csv"
+  ],
+  "python": "3.12.6",
+  "scikit_learn": "1.9.1",
+  "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+}

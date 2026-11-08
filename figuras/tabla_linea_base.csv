@@ -1,0 +1,13 @@
+Representación,Modelo,macro-F1,± sd,Accuracy,Precision,Recall
+Embeddings,Linear SVM,0.701,0.016,0.702,0.701,0.714
+Embeddings,Logistic Regression,0.686,0.028,0.686,0.686,0.704
+Embeddings,Random Forest,0.678,0.045,0.675,0.68,0.681
+TF-IDF,Random Forest,0.648,0.055,0.653,0.651,0.65
+Embeddings,Naive Bayes,0.64,0.016,0.639,0.638,0.655
+TF-IDF,Logistic Regression,0.638,0.028,0.645,0.641,0.64
+TF-IDF,Linear SVM,0.616,0.049,0.625,0.619,0.617
+TF-IDF,Naive Bayes,0.428,0.058,0.53,0.724,0.459
+Embeddings,Dummy (estratificado),0.335,0.058,0.361,0.334,0.336
+TF-IDF,Dummy (estratificado),0.335,0.058,0.361,0.334,0.336
+TF-IDF,Dummy (más frecuente),0.197,0.002,0.42,0.14,0.333
+Embeddings,Dummy (más frecuente),0.197,0.002,0.42,0.14,0.333

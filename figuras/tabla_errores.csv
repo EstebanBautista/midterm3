@@ -1,0 +1,6 @@
+real,pred,n
+neutral,negativo,12
+positivo,neutral,11
+neutral,positivo,8
+negativo,neutral,3
+negativo,positivo,1

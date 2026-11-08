@@ -1,0 +1,4 @@
+,train,test,% train,% test
+negativo,164,41,33.3,33.1
+neutral,207,52,42.0,41.9
+positivo,122,31,24.7,25.0

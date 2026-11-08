@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+Dataset/__MACOSX/
+Dataset.zip
+~$*.docx
+*.tmp
+plantilla/x/
+articulo/~$*
+*.stackdump
