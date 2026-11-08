@@ -1,7 +1,7 @@
-"""Build the midterm article on top of the official Ingenieria y Universidad template.
+"""Genera el artículo del midterm sobre la plantilla oficial de la revista Ingeniería y Universidad.
 
-Numbers are read from the CSV/JSON files the notebook exports, so the article
-always matches the last notebook run. Run from the repo root:
+Las cifras se leen de los CSV/JSON que exporta el notebook, así el artículo siempre coincide
+con la última ejecución. Ejecución desde la raíz del repositorio:
     .venv/Scripts/python articulo/build_articulo.py
 """
 import json
@@ -53,7 +53,7 @@ for el in list(body):
         body.remove(el)
 
 TNR = "Times New Roman"
-# Edit if needed (the template asks to remove names for the blind-review version)
+# Afiliación de los autores (la versión para revisión ciega se envía sin nombres)
 AFILIACION = "Pontificia Universidad Javeriana Cali, Sistemas Inteligentes"
 CAP_FONT = "Tw Cen MT Condensed"
 
@@ -73,7 +73,7 @@ def para(text="", size=12, align=WD_ALIGN_PARAGRAPH.JUSTIFY, bold=None, italic=N
     p.paragraph_format.space_after = Pt(after)
     p.paragraph_format.space_before = Pt(before)
     p.paragraph_format.line_spacing = 1.0
-    # simple markup: **bold** and ~~italic~~
+    # marcado simple: **negrita** y ~~cursiva~~
     for i, part in enumerate(text.split("**")):
         for j, sub in enumerate(part.split("~~")):
             if sub:
@@ -90,7 +90,7 @@ def heading(text, level=2):
 
 
 def subheading(text):
-    # template "Subtitles": Tw Cen MT Condensed 14 pt, bold italic, first-line indent 1.25 cm
+    # estilo "Subtitles" de la plantilla: Tw Cen MT Condensed 14 pt, negrita cursiva, sangría 1,25 cm
     p = para(text, size=14, bold=True, italic=True, font=CAP_FONT, after=4, before=8)
     p.paragraph_format.first_line_indent = Cm(1.25)
     p.paragraph_format.keep_with_next = True
@@ -135,7 +135,7 @@ def _borders(cell, top=None, bottom=None):
 
 
 def table(title, header, rows, widths_cm, src="Fuente: elaboración propia."):
-    """Academic three-rule table (top, header, bottom)."""
+    """Tabla con tres líneas horizontales (superior, encabezado, inferior)."""
     caption(title)
     t = doc.add_table(rows=1 + len(rows), cols=len(header))
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -276,7 +276,7 @@ para("Se usaron como referencia dos DummyClassifier (clase más frecuente y estr
      "macro-F1 como criterio (Tabla 3); la búsqueda aleatoria [15] queda como alternativa para espacios más grandes. El modelo final se eligió por su macro-F1 en validación cruzada, no en prueba, para no sesgar la "
      "selección. Sobre la prueba se reportan exactitud, precisión, exhaustividad (recall), macro-F1 y matriz de confusión. Un LLM "
      "se usó para sugerir rangos de búsqueda, resumir hallazgos y categorizar errores. Los comentarios ya venían anonimizados "
-     "(p. ej., el nombre del docente aparece como PROFESOR).")
+     "(en los comentarios, el nombre del docente evaluado está reemplazado por la etiqueta PROFESOR).")
 
 # ----------------------------------------------------------------- results
 heading("Resultados")

@@ -1,6 +1,8 @@
 # Clasificación de comentarios de evaluación docente (SET)
 
-**Sistemas Inteligentes:** Esteban David Muñoz Bautista, Nicolás Carreño Tascón, Brayan Zuluaga, Juan Manuel Canchala Giménez
+- **Curso:** Sistemas Inteligentes, Pontificia Universidad Javeriana Cali
+- **Profesor:** Jefferson Amado Peña Torres
+- **Integrantes:** Esteban David Muñoz Bautista, Nicolás Carreño Tascón, Brayan Zuluaga, Juan Manuel Canchala Giménez
 
 Este proyecto clasifica comentarios abiertos de estudiantes sobre la docencia como **negativo**, **neutral** o **positivo**.
 
@@ -70,12 +72,14 @@ La respuesta incluye `polaridad`, `confianza`, `probabilidades` (una por clase) 
 
 - **Se guarda el pipeline completo, no solo el clasificador.** El archivo `.joblib` contiene la limpieza, el vectorizador y el clasificador juntos, así el preprocesamiento es idéntico en entrenamiento y producción.
 - **El modelo no se re-entrena al iniciar.** La API y la app cargan el `.joblib` una sola vez.
-- **Cargue solo archivos `.joblib` de confianza.** La deserialización puede ejecutar código arbitrario.
-- **Mantenga las mismas versiones.** Use las versiones de `scikit-learn` y dependencias de `requirements.txt`. El `.json` de cada modelo registra las versiones con que se entrenó.
+- **Solo se cargan archivos `.joblib` propios.** La deserialización puede ejecutar código arbitrario, por eso no se cargan modelos de origen desconocido.
+- **Mismas versiones en entrenamiento y producción.** Las versiones de `scikit-learn` y sus dependencias están fijadas en `requirements.txt`. El `.json` de cada modelo registra las versiones con que se entrenó.
 - **Versionado y reversión.** Cada modelo se guarda como `modelo_polaridad_vN.joblib` + `.json`.
-  - **Para actualizar:** entrene, guarde una nueva versión `vN+1` y cambie `DEFAULT_VERSION` en `src/modelo.py`.
-  - **Para revertir:** vuelva a poner en `DEFAULT_VERSION` la versión anterior.
+  - **Actualización:** se entrena, se guarda una nueva versión `vN+1` y se cambia `DEFAULT_VERSION` en `src/modelo.py`.
+  - **Reversión:** se vuelve a poner en `DEFAULT_VERSION` la versión anterior.
 
-## Uso de LLM
+## Uso de LLM y privacidad
 
-Los LLM apoyaron la exploración del esquema, las reglas de preprocesamiento, la categorización de errores y la documentación. El equipo revisó todas las etiquetas y decisiones. Los comentarios llegaron anonimizados (el nombre del docente aparece como `PROFESOR`). No envíe comentarios identificables a servicios externos.
+Usamos modelos de lenguaje (LLM) como apoyo metodológico, según lo indicado en la guía del curso: para explorar el esquema de los datos, proponer reglas de preprocesamiento, categorizar errores y apoyar la documentación. Revisamos y validamos todas las decisiones como equipo.
+
+Los comentarios del dataset ya vienen anonimizados: el nombre del docente evaluado está reemplazado por la etiqueta `PROFESOR`. Por privacidad, no se enviaron comentarios con datos identificables a servicios externos.

@@ -1,6 +1,6 @@
-"""Streamlit interface for the polarity classifier.
+"""Interfaz Streamlit del clasificador de polaridad.
 
-Run from the repo root:
+Ejecución desde la raíz del repositorio:
     .venv/Scripts/streamlit run app/streamlit_app.py
 """
 import sys
@@ -33,7 +33,7 @@ with st.sidebar:
     c2.metric("Accuracy test", f"{meta['accuracy_test']:.3f}")
     st.caption(f"Entrenado con {meta['n_train']} comentarios · scikit-learn {meta['scikit_learn']}")
     st.divider()
-    st.caption("No ingrese datos personales. El modelo es un apoyo: revise manualmente los casos de baja confianza.")
+    st.caption("Herramienta de apoyo: los casos de baja confianza requieren revisión manual. Los comentarios no deben contener datos personales.")
 
 st.title("🎓 Clasificador de comentarios de evaluación docente")
 st.write("Clasifica comentarios de estudiantes en **negativo**, **neutral** o **positivo**.")

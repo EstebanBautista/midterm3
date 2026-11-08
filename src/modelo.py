@@ -1,7 +1,7 @@
-"""Load the trained pipeline once and expose a single predict function.
+"""Carga el pipeline entrenado una sola vez y expone una única función de predicción.
 
-Shared by the FastAPI service and the Streamlit app so both behave the same.
-Only load .joblib files you trust: unpickling can run arbitrary code.
+La usan tanto el servicio FastAPI como la app Streamlit, para que ambos se comporten igual.
+Solo se deben cargar archivos .joblib de confianza: la deserialización puede ejecutar código arbitrario.
 """
 import json
 from functools import lru_cache
@@ -17,7 +17,7 @@ MAX_CHARS = 5000
 
 @lru_cache(maxsize=4)
 def cargar_modelo(version: str = DEFAULT_VERSION):
-    """Return (pipeline, metadata) for a model version. Cached: loaded once per process."""
+    """Devuelve (pipeline, metadatos) de una versión del modelo. Se carga una sola vez por proceso."""
     import joblib
 
     ruta = MODEL_DIR / f"modelo_polaridad_{version}.joblib"
@@ -30,17 +30,17 @@ def cargar_modelo(version: str = DEFAULT_VERSION):
 def _probabilidades(modelo, textos):
     if hasattr(modelo, "predict_proba"):
         return modelo.predict_proba(textos)
-    # LinearSVC has no predict_proba: softmax over decision scores as a fallback
+    # LinearSVC no tiene predict_proba: se usa softmax sobre los puntajes de decisión
     s = modelo.decision_function(textos)
     e = np.exp(s - s.max(axis=1, keepdims=True))
     return e / e.sum(axis=1, keepdims=True)
 
 
 def predecir(textos, version: str = DEFAULT_VERSION):
-    """Classify a list of comments.
+    """Clasifica una lista de comentarios.
 
-    Returns one dict per input: {texto, polaridad, confianza, probabilidades, valido, error}.
-    Empty or too-long comments are not sent to the model and come back with valido=False.
+    Devuelve un diccionario por comentario: {texto, polaridad, confianza, probabilidades, valido, error}.
+    Los comentarios vacíos o demasiado largos no pasan por el modelo y se marcan con valido=False.
     """
     modelo, _ = cargar_modelo(version)
     resultados = [None] * len(textos)

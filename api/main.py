@@ -1,8 +1,8 @@
-"""Prediction service for student evaluation of teaching comments.
+"""Servicio de predicción para comentarios de evaluación docente.
 
-Run from the repo root:
+Ejecución desde la raíz del repositorio:
     .venv/Scripts/uvicorn api.main:app --reload
-Interactive docs: http://127.0.0.1:8000/docs
+Documentación interactiva: http://127.0.0.1:8000/docs
 """
 import sys
 import time
@@ -18,7 +18,7 @@ from src.modelo import DEFAULT_VERSION, cargar_modelo, predecir  # noqa: E402
 
 @asynccontextmanager
 async def lifespan(_app):
-    # load the model once at startup and warm it up; never retrain here
+    # el modelo se carga una sola vez al iniciar; aquí nunca se re-entrena
     cargar_modelo(DEFAULT_VERSION)
     predecir(["calentamiento"])
     yield

@@ -1,4 +1,4 @@
-"""Smoke tests for the saved model and the API. Run: .venv/Scripts/python -m pytest -q"""
+"""Pruebas básicas del modelo guardado y de la API. Ejecución: .venv/Scripts/python -m pytest -q"""
 import sys
 from pathlib import Path
 

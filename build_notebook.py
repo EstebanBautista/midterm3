@@ -1,4 +1,4 @@
-"""Genera midterm3_clasificacion_SET.ipynb (pasos 1-7 de la slide 4)."""
+"""Genera notebooks/midterm3_clasificacion_SET.ipynb (pasos 1-7 de la guía del midterm)."""
 import nbformat as nbf
 
 nb = nbf.v4.new_notebook()
@@ -8,7 +8,7 @@ code = lambda s: C.append(nbf.v4.new_code_cell(s.strip()))
 
 md(r"""
 # Midterm 3 — Clasificación de comentarios de Evaluación Docente (SET)
-**Sistemas Inteligentes** · Esteban David Muñoz Bautista, Nicolás Carreño Tascón, Brayan Zuluaga, Juan Manuel Canchala Giménez
+**Sistemas Inteligentes** · Profesor: Jefferson Amado Peña Torres\n\n**Integrantes:** Esteban David Muñoz Bautista, Nicolás Carreño Tascón, Brayan Zuluaga, Juan Manuel Canchala Giménez
 
 Objetivo: evaluar un modelo inicial de *Machine Learning* que clasifique la **polaridad** (`negativo`, `neutral`, `positivo`) de comentarios abiertos de estudiantes.
 El notebook sigue los 7 pasos de la guía: (1) carga y exploración, (2) preprocesamiento, (3) división de datos, (4) representación vectorial,
@@ -231,7 +231,7 @@ plt.tight_layout(); plt.savefig(FIG_DIR / "fig2_linea_base.png", dpi=200); plt.s
 
 md(r"""
 ## 6. Ajuste de hiperparámetros
-`Pipeline` + `GridSearchCV` con CV estratificada (5 folds), selección por **macro-F1**. Se ajustan los tres mejores clasificadores lineales/árbol con ambas representaciones y una variante híbrida (TF-IDF + embeddings).
+`Pipeline` + `GridSearchCV` con CV estratificada (5 folds), selección por **macro-F1**. Se ajustan Logistic Regression, Linear SVM y Naive Bayes con TF-IDF; Logistic Regression, Linear SVM y Random Forest con embeddings; y Logistic Regression con una representación híbrida (TF-IDF + embeddings).
 """)
 
 code(r"""
@@ -364,7 +364,7 @@ resumen.to_csv(FIG_DIR / "tabla_split.csv")
 """)
 
 code(r"""
-# Validación de carga y predicciones (slide 5, paso 3): se carga el archivo guardado mediante
+# Validación de carga y predicciones: se carga el archivo guardado mediante
 # src/modelo.py (el mismo código que usan la API y la app), que además rechaza textos vacíos o demasiado largos.
 from src.modelo import predecir, cargar_modelo
 cargar_modelo.cache_clear()
@@ -378,6 +378,15 @@ for r in predecir(pruebas):
         print(f"{r['polaridad']:>9} ({r['confianza']:.2f}) <- {r['texto'][:70]!r}")
     else:
         print(f"{'INVÁLIDO':>9}        <- {r['texto'][:20]!r}: {r['error']}")
+""")
+
+md(r"""
+## Conclusiones
+- **Datos:** tras la limpieza quedan 617 comentarios (259 neutrales, 205 negativos y 153 positivos). La principal dificultad del conjunto es la calidad del etiquetado: hay etiquetas en formatos distintos y comentarios con etiquetas poco coherentes con su contenido.
+- **Representación:** los embeddings semánticos multilingües superan a TF-IDF con todos los clasificadores. Con pocos datos etiquetados, reutilizar un modelo preentrenado aporta más que las representaciones basadas en frecuencia de palabras.
+- **Modelo seleccionado:** Logistic Regression con la representación híbrida (TF-IDF + embeddings), elegido por macro-F1 en validación cruzada (0,711). En prueba obtiene macro-F1 = 0,714 y exactitud = 0,718, frente a 0,197 del `DummyClassifier`.
+- **Errores:** la clase negativa es la mejor reconocida. Casi todos los errores involucran la clase neutral, en especial comentarios con polaridad mixta («…pero…», «…sin embargo…»).
+- **Siguiente fase (proyecto final):** el `Pipeline` guardado en `modelos/` ya se usa en la API (`api/main.py`) y en la aplicación (`app/streamlit_app.py`). Queda pendiente validar las etiquetas, abordar la clasificación por aspectos y desplegar el MVP.
 """)
 
 nb["cells"] = C

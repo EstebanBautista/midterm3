@@ -1,7 +1,7 @@
-"""Text preprocessing and feature transformers shared by the notebook, API and app.
+"""Preprocesamiento de texto y transformadores compartidos por el notebook, la API y la app.
 
-They live in an importable module (not in the notebook) so that a Pipeline saved
-with joblib can be loaded again from the API or the Streamlit app.
+Están en un módulo importable (y no dentro del notebook) para que el Pipeline guardado
+con joblib se pueda cargar de nuevo desde la API o desde la aplicación Streamlit.
 """
 import re
 import unicodedata
@@ -16,8 +16,8 @@ EMB_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
 
 def limpiar_texto(t) -> str:
-    """Normalize a comment: emojis to tokens, lowercase, strip accents,
-    anonymize URLs/emails/numbers, and mark the word after a negation."""
+    """Normaliza un comentario: emojis a marcadores, minúsculas, sin tildes,
+    URL/correos/números anonimizados y marcado de la palabra que sigue a una negación."""
     if t is None or (isinstance(t, float) and np.isnan(t)):
         t = ""
     t = str(t)
@@ -29,7 +29,7 @@ def limpiar_texto(t) -> str:
     t = "".join(ch for ch in t if not unicodedata.combining(ch))
     t = re.sub(r"\d+", " num ", t)
     t = re.sub(r"[^a-zñ_ ]+", " ", t)
-    t = re.sub(r"\bsin embargo\b", "sin_embargo", t)   # connector, not a negation
+    t = re.sub(r"\bsin embargo\b", "sin_embargo", t)   # conector, no es una negación
     out, neg = [], False
     for w in t.split():
         out.append(f"no_{w}" if neg and w not in NEGACIONES else w)
@@ -38,7 +38,7 @@ def limpiar_texto(t) -> str:
 
 
 class LimpiadorTexto(BaseEstimator, TransformerMixin):
-    """Pipeline step that applies limpiar_texto to every comment."""
+    """Paso del Pipeline que aplica limpiar_texto a cada comentario."""
 
     def fit(self, X, y=None):
         return self
@@ -59,7 +59,7 @@ def _st(model_name):
 
 
 def embed(textos, model_name=EMB_NAME):
-    """Return L2-normalized sentence embeddings, cached per text."""
+    """Devuelve embeddings de oraciones normalizados (L2), con caché por texto."""
     textos = ["" if t is None else str(t) for t in textos]
     faltan = list(dict.fromkeys(t for t in textos if (model_name, t) not in _cache))
     if faltan:
@@ -70,8 +70,8 @@ def embed(textos, model_name=EMB_NAME):
 
 
 class EmbeddingTransformer(BaseEstimator, TransformerMixin):
-    """Pipeline step that turns raw text into Sentence-Transformers embeddings.
-    The pretrained model is not fitted on our data, so there is no leakage."""
+    """Paso del Pipeline que convierte texto en embeddings de Sentence-Transformers.
+    El modelo preentrenado no se ajusta con los datos del curso, por lo que no hay fuga de información."""
 
     def __init__(self, model_name=EMB_NAME):
         self.model_name = model_name
