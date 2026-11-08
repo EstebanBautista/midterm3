@@ -22,7 +22,7 @@ El modelo se seleccionó por su macro-F1 en validación cruzada, no por su resul
 ## Estructura del repositorio
 
 ```
-Dataset/                 CSV originales (617 comentarios útiles tras la limpieza)
+Dataset/                 CSV originales (617 comentarios útiles tras la limpieza; el nombre del docente evaluado viene reemplazado por la etiqueta PROFESOR)
 notebooks/               midterm3_clasificacion_SET.ipynb (pasos 1-7)
 build_notebook.py        genera el notebook
 src/preprocesamiento.py  limpieza de texto + transformador de embeddings (compartido por notebook, API y app)
@@ -78,8 +78,6 @@ La respuesta incluye `polaridad`, `confianza`, `probabilidades` (una por clase) 
   - **Actualización:** se entrena, se guarda una nueva versión `vN+1` y se cambia `DEFAULT_VERSION` en `src/modelo.py`.
   - **Reversión:** se vuelve a poner en `DEFAULT_VERSION` la versión anterior.
 
-## Uso de LLM y privacidad
+## Uso de LLM
 
-Usamos modelos de lenguaje (LLM) como apoyo metodológico, según lo indicado en la guía del curso: para explorar el esquema de los datos, proponer reglas de preprocesamiento, categorizar errores y apoyar la documentación. Revisamos y validamos todas las decisiones como equipo.
-
-Los comentarios del dataset ya vienen anonimizados: el nombre del docente evaluado está reemplazado por la etiqueta `PROFESOR`. Por privacidad, no se enviaron comentarios con datos identificables a servicios externos.
+Se utilizaron LLM como apoyo en la exploración de datos, el preprocesamiento y el análisis de errores; las decisiones fueron revisadas por los integrantes.
