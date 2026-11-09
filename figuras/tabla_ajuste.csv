@@ -1,8 +1,9 @@
-Representación,Modelo,macro-F1 CV,± sd,Combinaciones,Mejores parámetros,Tiempo (s)
-Híbrido,Logistic Regression,0.711,0.044,7,{'clf__C': 1},11.3
-Embeddings,Logistic Regression,0.707,0.02,7,{'clf__C': 2},0.7
-Embeddings,Linear SVM,0.701,0.016,7,{'clf__C': 1},1.2
-Embeddings,Random Forest,0.682,0.027,12,"{'clf__max_depth': 10, 'clf__min_samples_leaf': 1, 'clf__n_estimators': 500}",28.6
-TF-IDF,Logistic Regression,0.644,0.032,28,"{'clf__C': 0.5, 'vec__pal__min_df': 1, 'vec__pal__ngram_range': (1, 2)}",37.8
-TF-IDF,Linear SVM,0.643,0.029,28,"{'clf__C': 0.1, 'vec__pal__min_df': 2, 'vec__pal__ngram_range': (1, 2)}",30.1
-TF-IDF,Naive Bayes,0.605,0.032,10,"{'clf__alpha': 0.05, 'vec__pal__ngram_range': (1, 1)}",9.4
+Representación,Modelo,macro-F1 CV,Desv. est.,Combinaciones,Mejores parámetros,Tiempo (s)
+Híbrido,Logistic Regression,0.711,0.044,7,{'clf__C': 1},11.2
+Embeddings,Logistic Regression,0.707,0.02,7,{'clf__C': 2},0.6
+Embeddings,Linear SVM,0.701,0.016,7,{'clf__C': 1},1.4
+Embeddings,Random Forest,0.682,0.027,12,"{'clf__max_depth': 10, 'clf__min_samples_leaf': 1, 'clf__n_estimators': 500}",32.8
+TF-IDF,Random Forest,0.649,0.054,16,"{'clf__max_depth': None, 'clf__min_samples_leaf': 3, 'clf__n_estimators': 500, 'vec__pal__ngram_range': (1, 2)}",49.7
+TF-IDF,Logistic Regression,0.644,0.032,28,"{'clf__C': 0.5, 'vec__pal__min_df': 1, 'vec__pal__ngram_range': (1, 2)}",33.0
+TF-IDF,Linear SVM,0.643,0.029,28,"{'clf__C': 0.1, 'vec__pal__min_df': 2, 'vec__pal__ngram_range': (1, 2)}",24.9
+TF-IDF,Naive Bayes,0.605,0.032,10,"{'clf__alpha': 0.05, 'vec__pal__ngram_range': (1, 1)}",7.7

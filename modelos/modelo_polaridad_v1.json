@@ -20,7 +20,7 @@
     "feedback_curso_universitario2.csv",
     "feedback_curso_universitario3.csv"
   ],
-  "python": "3.12.6",
+  "python": "3.12.10",
   "scikit_learn": "1.9.1",
   "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 }

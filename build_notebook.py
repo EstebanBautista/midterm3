@@ -7,12 +7,12 @@ md = lambda s: C.append(nbf.v4.new_markdown_cell(s.strip()))
 code = lambda s: C.append(nbf.v4.new_code_cell(s.strip()))
 
 md(r"""
-# Midterm 3 — Clasificación de comentarios de Evaluación Docente (SET)
-**Sistemas Inteligentes** · Profesor: Jefferson Amado Peña Torres\n\n**Integrantes:** Esteban David Muñoz Bautista, Nicolás Carreño Tascón, Brayan Zuluaga, Juan Manuel Canchala Giménez
+# Midterm 3: Clasificación de comentarios de evaluación docente (SET)
+Sistemas Inteligentes, profesor Jefferson Amado Peña Torres
 
-Objetivo: evaluar un modelo inicial de *Machine Learning* que clasifique la **polaridad** (`negativo`, `neutral`, `positivo`) de comentarios abiertos de estudiantes.
-El notebook sigue los 7 pasos de la guía: (1) carga y exploración, (2) preprocesamiento, (3) división de datos, (4) representación vectorial,
-(5) línea base, (6) ajuste de hiperparámetros y (7) evaluación final.
+Integrantes: Esteban David Muñoz Bautista, Nicolás Carreño Tascón, Brayan Zuluaga y Juan Manuel Canchala Giménez
+
+En este notebook se evalúa un modelo inicial de Machine Learning que clasifica la polaridad de comentarios abiertos de estudiantes en negativo, neutral o positivo, siguiendo los 7 pasos de la guía del curso, desde la carga de los datos hasta la evaluación final.
 """)
 
 code(r"""
@@ -78,12 +78,8 @@ for c in ["polaridad_basica", "grano_fino", "emocion", "curso", "semestre"]:
 """)
 
 md(r"""
-**Hallazgos de calidad**
-- Cada archivo trae la fila de encabezado repetida (eliminada arriba).
-- `polaridad_basica` mezcla formatos: `negativo`, `['negativo']`, `["['positivo']"]`, `positiva` y un valor inválido `['posicion']`.
-- `grano_fino` y `emocion` son casi constantes (≈ 3 y `neutral`) → no sirven como variable objetivo.
-- `aspectos` es una lista JSON multi-etiqueta (se deja para el proyecto final).
-- No existe columna de autor/estudiante; ver paso 3.
+### Hallazgos de calidad
+Cada archivo trae la fila de encabezado repetida, por eso se eliminó en la celda anterior. La columna `polaridad_basica` mezcla formatos como `negativo`, `['negativo']`, `["['positivo']"]` y `positiva`, además de un valor inválido que es `['posicion']`, mientras que `grano_fino` y `emocion` casi siempre valen 3 y `neutral`, así que no sirven como variable objetivo. La columna `aspectos` es una lista JSON con varias etiquetas por comentario y se deja para el proyecto final. Tampoco existe una columna de autor, lo que afecta la división de datos del paso 3.
 """)
 
 code(r"""
@@ -137,13 +133,9 @@ print("Aspectos distintos:", asp.size); print(asp.head(12).to_string())
 
 md(r"""
 ## 2. Definición de la tarea y preprocesamiento
-**Tarea:** clasificación multiclase de un solo comentario → {negativo, neutral, positivo}. Métrica principal: **macro-F1** (las clases están desbalanceadas).
+La tarea es clasificar cada comentario en negativo, neutral o positivo, y como las clases están desbalanceadas la métrica principal es macro-F1.
 
-**Preprocesamiento** (dentro del `Pipeline` para que se aplique igual en entrenamiento e inferencia):
-- minúsculas y normalización Unicode (se eliminan tildes para unificar variantes con/sin tilde),
-- URLs, correos y números → tokens genéricos (anonimización básica),
-- emojis → tokens `emo_pos` / `emo_neg`,
-- **no** se eliminan negaciones ni intensificadores (`no`, `muy`, `nada`, `poco`, `bastante`), porque cambian la polaridad; además se marca la palabra siguiente a una negación (`no claro` → `no_claro`).
+El preprocesamiento va dentro del `Pipeline` para que se aplique igual en entrenamiento y en inferencia. El texto se pasa a minúsculas y se le quitan las tildes para unificar las palabras que vienen escritas con y sin ellas, las URL, correos y números se reemplazan por tokens genéricos como una anonimización básica y los emojis se convierten en `emo_pos` o `emo_neg`. Las negaciones e intensificadores como `no`, `muy`, `nada`, `poco` y `bastante` no se eliminan porque cambian la polaridad, y además se marca la palabra que sigue a una negación, de modo que `no claro` queda como `no no_claro`.
 """)
 
 code(r"""
@@ -155,9 +147,9 @@ print(limpiar_texto("El profe NO explica claro 😡 y el parcial 2 fue muy difí
 
 md(r"""
 ## 3. División de datos
-Partición **estratificada 80 % / 20 %** con semilla fija. El conjunto de prueba **no se usa** hasta el paso 7; toda selección de modelo se hace con validación cruzada sobre *train*.
+Se hace una partición estratificada de 80 % para entrenamiento y 20 % para prueba con semilla fija, y el conjunto de prueba no se toca hasta el paso 7, ya que toda la selección de modelos se hace con validación cruzada sobre train.
 
-> El CSV **no incluye identificador de autor**, por lo que no es posible agrupar por estudiante (`GroupKFold`). Se verificó que no hay comentarios duplicados entre archivos, lo que reduce el riesgo de fuga de información. Si en el proyecto final se dispone de un ID anónimo de estudiante, debe usarse `StratifiedGroupKFold`.
+El CSV no incluye un identificador de autor, por lo que no es posible agrupar por estudiante con `GroupKFold`. Se verificó que no hay comentarios duplicados entre archivos para reducir el riesgo de fuga de información, y si en el proyecto final se llega a tener un ID anónimo de estudiante habría que usar `StratifiedGroupKFold`.
 """)
 
 code(r"""
@@ -172,9 +164,7 @@ print(f"Train: {len(X_train)} | Test: {len(X_test)}"); resumen
 
 md(r"""
 ## 4. Representación vectorial del texto
-Se comparan dos familias, **ajustadas solo con train** (dentro de cada fold de CV):
-1. **TF-IDF** de palabras (1–2 gramas) + caracteres (3–5 gramas, robusto a errores ortográficos).
-2. **Embeddings semánticos** de Hugging Face: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (multilingüe, 384 dimensiones). El modelo es preentrenado y no se ajusta con nuestros datos, por lo que no hay fuga.
+Se comparan dos representaciones, ajustadas solo con train dentro de cada fold de la validación cruzada. La primera es TF-IDF, que une n-gramas de palabras de 1 a 2 con n-gramas de caracteres de 3 a 5, estos últimos ayudan con los errores ortográficos. La segunda son los embeddings semánticos de Hugging Face con el modelo `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, que es multilingüe y genera vectores de 384 dimensiones, y como ya viene preentrenado y no se ajusta con estos datos no introduce fuga.
 """)
 
 code(r"""
@@ -190,8 +180,7 @@ def tfidf():
 
 md(r"""
 ## 5. Entrenamiento inicial y línea base
-Validación cruzada **estratificada de 5 folds** sobre train. Se comparan `DummyClassifier` (referencia), Logistic Regression, Linear SVM, Naive Bayes y Random Forest con ambas representaciones.
-(Naive Bayes: `MultinomialNB` para TF-IDF y `GaussianNB` para embeddings, que tienen valores negativos.)
+Con validación cruzada estratificada de 5 folds sobre train se compara `DummyClassifier` como referencia contra Logistic Regression, Linear SVM, Naive Bayes y Random Forest, usando ambas representaciones. En Naive Bayes se usa `MultinomialNB` con TF-IDF y `GaussianNB` con embeddings, porque los embeddings tienen valores negativos.
 """)
 
 code(r"""
@@ -215,7 +204,7 @@ for rep, builder in [("TF-IDF", p_tfidf), ("Embeddings", p_emb)]:
         clf = (MultinomialNB() if rep == "TF-IDF" else GaussianNB()) if mk is None else mk()
         r = cross_validate(builder(clf), X_train, y_train, cv=CV, scoring=SCORING, n_jobs=1)
         filas.append({"Representación": rep, "Modelo": nombre,
-                      "macro-F1": r["test_macro_f1"].mean(), "± sd": r["test_macro_f1"].std(),
+                      "macro-F1": r["test_macro_f1"].mean(), "Desv. est.": r["test_macro_f1"].std(),
                       "Accuracy": r["test_accuracy"].mean(), "Precision": r["test_precision"].mean(),
                       "Recall": r["test_recall"].mean()})
 base = pd.DataFrame(filas).sort_values("macro-F1", ascending=False).reset_index(drop=True)
@@ -231,7 +220,7 @@ plt.tight_layout(); plt.savefig(FIG_DIR / "fig2_linea_base.png", dpi=200); plt.s
 
 md(r"""
 ## 6. Ajuste de hiperparámetros
-`Pipeline` + `GridSearchCV` con CV estratificada (5 folds), selección por **macro-F1**. Se ajustan Logistic Regression, Linear SVM y Naive Bayes con TF-IDF; Logistic Regression, Linear SVM y Random Forest con embeddings; y Logistic Regression con una representación híbrida (TF-IDF + embeddings).
+Se usa `Pipeline` con `GridSearchCV`, validación cruzada estratificada de 5 folds y selección por macro-F1. Con TF-IDF se ajustan los cuatro clasificadores y con embeddings se ajustan Logistic Regression, Linear SVM y Random Forest, mientras que Logistic Regression también se prueba con una representación híbrida que une TF-IDF y embeddings.
 """)
 
 code(r"""
@@ -250,6 +239,8 @@ busquedas = {
         {"vec__pal__ngram_range": [(1, 1), (1, 2)], "vec__pal__min_df": [1, 2], "clf__C": C_GRID}),
     ("TF-IDF", "Naive Bayes"): (p_tfidf(MultinomialNB()),
         {"vec__pal__ngram_range": [(1, 1), (1, 2)], "clf__alpha": [0.01, 0.05, 0.1, 0.5, 1.0]}),
+    ("TF-IDF", "Random Forest"): (p_tfidf(RandomForestClassifier(class_weight="balanced", random_state=SEED, n_jobs=-1)),
+        {"vec__pal__ngram_range": [(1, 1), (1, 2)], "clf__n_estimators": [300, 500], "clf__max_depth": [None, 20], "clf__min_samples_leaf": [1, 3]}),
     ("Embeddings", "Logistic Regression"): (p_emb(LogisticRegression(max_iter=3000, class_weight="balanced", random_state=SEED)),
         {"clf__C": C_GRID}),
     ("Embeddings", "Linear SVM"): (p_emb(LinearSVC(class_weight="balanced", random_state=SEED)),
@@ -265,7 +256,7 @@ for (rep, nom), (pipe, grid) in busquedas.items():
     gs = GridSearchCV(pipe, grid, cv=CV, scoring="f1_macro", n_jobs=1, refit=True).fit(X_train, y_train)
     i = gs.best_index_
     resultados.append({"Representación": rep, "Modelo": nom, "macro-F1 CV": gs.best_score_,
-                       "± sd": gs.cv_results_["std_test_score"][i], "Combinaciones": len(gs.cv_results_["params"]),
+                       "Desv. est.": gs.cv_results_["std_test_score"][i], "Combinaciones": len(gs.cv_results_["params"]),
                        "Mejores parámetros": gs.best_params_, "Tiempo (s)": round(time.time() - t0, 1)})
     mejores[(rep, nom)] = gs.best_estimator_
 ajuste = pd.DataFrame(resultados).sort_values("macro-F1 CV", ascending=False).reset_index(drop=True)
@@ -274,7 +265,7 @@ pd.set_option("display.max_colwidth", 120); ajuste.round(3)
 
 md(r"""
 ## 7. Evaluación final y comparación
-Se evalúan sobre el **conjunto de prueba (20 %)**, una sola vez, los modelos ajustados. El modelo final se elige por macro-F1 en CV (no en test) para no sesgar la selección.
+Los modelos ajustados se evalúan una sola vez sobre el 20 % de prueba. El modelo final se elige por su macro-F1 en validación cruzada y no por el resultado en test, ya que elegir con test sesgaría la selección.
 """)
 
 code(r"""
@@ -286,7 +277,7 @@ for (rep, nom), est in mejores.items():
                   "Recall (macro)": recall_score(y_test, p, average="macro", zero_division=0),
                   "macro-F1": f1_score(y_test, p, average="macro")})
 dummy = DummyClassifier(strategy="most_frequent").fit(X_train, y_train); pd_ = dummy.predict(X_test)
-filas.append({"Representación": "—", "Modelo": "Dummy (más frecuente)", "Accuracy": accuracy_score(y_test, pd_),
+filas.append({"Representación": "N/A", "Modelo": "Dummy (más frecuente)", "Accuracy": accuracy_score(y_test, pd_),
               "Precision (macro)": precision_score(y_test, pd_, average="macro", zero_division=0),
               "Recall (macro)": recall_score(y_test, pd_, average="macro", zero_division=0),
               "macro-F1": f1_score(y_test, pd_, average="macro")})
@@ -306,7 +297,7 @@ for a, norm, tit in [(ax[0], None, "Conteos"), (ax[1], "true", "Normalizada por 
     ConfusionMatrixDisplay(confusion_matrix(y_test, y_pred, labels=ORDEN, normalize=norm), display_labels=ORDEN).plot(
         ax=a, cmap="Blues", colorbar=False, values_format=".2f" if norm else "d")
     a.grid(False); a.set_title(tit); a.set_xlabel("Predicción"); a.set_ylabel("Real")
-fig.suptitle(f"Matriz de confusión en test — {mejor_key[1]} + {mejor_key[0]}")
+fig.suptitle(f"Matriz de confusión en test: {mejor_key[1]} + {mejor_key[0]}")
 plt.tight_layout(); plt.savefig(FIG_DIR / "fig3_matriz_confusion.png", dpi=200); plt.show()
 """)
 
@@ -323,8 +314,8 @@ for _, r in err.head(10).iterrows():
 """)
 
 md(r"""
-### Palabras más influyentes (modelo interpretable TF-IDF + Logistic Regression)
-Los embeddings no son interpretables palabra a palabra; para explicar qué aprende el modelo se usan los coeficientes del modelo TF-IDF ajustado.
+### Palabras más influyentes
+Los embeddings no se pueden interpretar palabra por palabra, así que para ver qué aprende el modelo se revisan los coeficientes del modelo ajustado con TF-IDF y Logistic Regression.
 """)
 code(r"""
 m_tf = mejores[("TF-IDF", "Logistic Regression")]
@@ -338,8 +329,8 @@ for i, c in enumerate(clf.classes_):
 """)
 
 md(r"""
-### Guardar modelo (insumo para el MVP del proyecto final)
-Se guarda el `Pipeline` completo (limpieza + vectorizador + clasificador) con `joblib`, junto con metadatos de versión.
+### Guardar el modelo
+Se guarda con `joblib` el `Pipeline` completo, con la limpieza, el vectorizador y el clasificador, junto con un archivo de metadatos con la versión que después sirve para el MVP del proyecto final.
 """)
 code(r"""
 nombre_archivo = MODEL_DIR / "modelo_polaridad_v1.joblib"
@@ -382,11 +373,13 @@ for r in predecir(pruebas):
 
 md(r"""
 ## Conclusiones
-- **Datos:** tras la limpieza quedan 617 comentarios (259 neutrales, 205 negativos y 153 positivos). La principal dificultad del conjunto es la calidad del etiquetado: hay etiquetas en formatos distintos y comentarios con etiquetas poco coherentes con su contenido.
-- **Representación:** los embeddings semánticos multilingües superan a TF-IDF con todos los clasificadores. Con pocos datos etiquetados, reutilizar un modelo preentrenado aporta más que las representaciones basadas en frecuencia de palabras.
-- **Modelo seleccionado:** Logistic Regression con la representación híbrida (TF-IDF + embeddings), elegido por macro-F1 en validación cruzada (0,711). En prueba obtiene macro-F1 = 0,714 y exactitud = 0,718, frente a 0,197 del `DummyClassifier`.
-- **Errores:** la clase negativa es la mejor reconocida. Casi todos los errores involucran la clase neutral, en especial comentarios con polaridad mixta («…pero…», «…sin embargo…»).
-- **Siguiente fase (proyecto final):** el `Pipeline` guardado en `modelos/` ya se usa en la API (`api/main.py`) y en la aplicación (`app/streamlit_app.py`). Queda pendiente validar las etiquetas, abordar la clasificación por aspectos y desplegar el MVP.
+Después de la limpieza quedan 617 comentarios, de los cuales 259 son neutrales, 205 negativos y 153 positivos. La mayor dificultad del conjunto está en la calidad del etiquetado, ya que hay etiquetas en formatos distintos y algunos comentarios tienen una etiqueta que no coincide con lo que dicen.
+
+Los embeddings multilingües superan a TF-IDF con todos los clasificadores, y con tan pocos datos etiquetados un modelo preentrenado aporta más que las representaciones basadas en frecuencia de palabras.
+
+El modelo seleccionado es Logistic Regression con la representación híbrida, elegido por su macro-F1 de 0,711 en validación cruzada. En prueba obtiene un macro-F1 de 0,714 y una exactitud de 0,718, mientras que el `DummyClassifier` se queda en 0,197. La clase negativa es la que mejor se reconoce y casi todos los errores involucran la clase neutral, sobre todo en comentarios que mezclan elogios y críticas.
+
+El `Pipeline` guardado en `modelos/` ya se usa en la API y en la aplicación, y para el proyecto final queda pendiente validar las etiquetas, abordar la clasificación por aspectos y desplegar el MVP.
 """)
 
 nb["cells"] = C

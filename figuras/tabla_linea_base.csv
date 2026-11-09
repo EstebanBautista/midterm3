@@ -1,4 +1,4 @@
-Representación,Modelo,macro-F1,± sd,Accuracy,Precision,Recall
+Representación,Modelo,macro-F1,Desv. est.,Accuracy,Precision,Recall
 Embeddings,Linear SVM,0.701,0.016,0.702,0.701,0.714
 Embeddings,Logistic Regression,0.686,0.028,0.686,0.686,0.704
 Embeddings,Random Forest,0.678,0.045,0.675,0.68,0.681
