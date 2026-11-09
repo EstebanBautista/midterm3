@@ -211,7 +211,7 @@ heading("Materiales y métodos")
 subheading("Conjunto de datos y exploración")
 para("Se usaron tres archivos CSV suministrados por el curso, con las columnas id, curso, feedback, polaridad_basica, grano_fino, "
      "emocion, aspectos y semestre. Los comentarios vienen de siete asignaturas como Sistemas Operativos, Bases de Datos y Sistemas Inteligentes, "
-     "de los semestres 2023-1 a 2024-2. En la exploración inicial, apoyada por un LLM para revisar el esquema, se encontraron los problemas de "
+     "de los semestres 2023-1 a 2024-2. En la exploración inicial, apoyada por un LLM, Claude Opus 5.5 con nivel de esfuerzo medio, para revisar el esquema, se encontraron los problemas de "
      "calidad que resume la Tabla 1, mientras que no hubo valores faltantes, comentarios vacíos ni duplicados.")
 table("Tabla 1. Problemas de calidad encontrados y tratamiento aplicado.",
       ["Problema", "Tratamiento"],
@@ -233,7 +233,7 @@ para("La tarea es una clasificación multiclase en la que cada comentario se asi
      "preprocesamiento va integrado en el pipeline para que se aplique igual en entrenamiento y en inferencia, y consiste en pasar el texto a "
      "minúsculas, eliminar tildes, reemplazar URL, correos y números por marcadores como una anonimización básica, convertir emojis en los "
      "marcadores emo_pos y emo_neg y marcar las negaciones, de modo que no claro queda como no no_claro. Las palabras vacías no se eliminan porque "
-     "negaciones e intensificadores como no, muy, nada o poco cambian la polaridad. Un LLM apoyó la definición de estas reglas, y las decisiones "
+     "negaciones e intensificadores como no, muy, nada o poco cambian la polaridad. El LLM apoyó la definición de estas reglas, y las decisiones "
      "finales fueron validadas por el equipo.")
 eq = para("", align=WD_ALIGN_PARAGRAPH.CENTER, after=6, before=2)
 for txt, it, sub in [("macro-F1 = (F1", False, False), ("1", False, True), (" + F1", False, False), ("2", False, True),
@@ -266,7 +266,7 @@ para("Como referencia se usaron dos DummyClassifier, uno de clase más frecuente
      "embeddings y Regresión Logística con la representación híbrida se ajustaron con búsqueda en malla (GridSearchCV) usando macro-F1 como "
      "criterio, como se ve en la Tabla 3, mientras que la búsqueda aleatoria [15] queda como alternativa para espacios más grandes. El modelo "
      "final se eligió por su macro-F1 en validación cruzada y no en prueba, para no sesgar la selección. Sobre la prueba se reportan exactitud, "
-     "precisión, exhaustividad o recall, macro-F1 y matriz de confusión. Un LLM se usó como apoyo en el análisis de errores. Los comentarios "
+     "precisión, exhaustividad o recall, macro-F1 y matriz de confusión. El LLM se usó como apoyo en el análisis de errores. Los comentarios "
      "venían anonimizados, con el nombre del docente evaluado reemplazado por la etiqueta PROFESOR.")
 
 # ----------------------------------------------------------------- results
@@ -324,7 +324,7 @@ figure(FIG / "fig3_matriz_confusion.png", 16.0, "Figura 3. Matriz de confusión 
 subheading("Análisis de errores")
 para(f"La clase negativa fue la mejor reconocida, con un recall de {f3(rep.loc['negativo', 'recall'])}, mientras que las clases neutral y positiva "
      f"concentraron los errores, como se observa en la Figura 3. De los {n_err} errores, {n_err_neutral} involucraron la clase neutral, y "
-     f"{n_pos_neg_txt}. La revisión cualitativa, apoyada por un LLM, identificó tres categorías de error.")
+     f"{n_pos_neg_txt}. La revisión cualitativa, apoyada por el LLM, identificó tres categorías de error.")
 para("La primera es la polaridad mixta, en comentarios que combinan elogios y críticas con conectores como pero, aunque o sin embargo, por ejemplo "
      "\"el material fue muy completo... sin embargo, algunas veces se complicaron los ejemplos\", etiquetado positivo y predicho neutral. La segunda "
      "es la frontera difusa entre neutral y positivo, con comentarios moderadamente favorables etiquetados como neutrales, por ejemplo \"el horario "
