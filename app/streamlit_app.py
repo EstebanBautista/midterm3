@@ -16,10 +16,10 @@ from src.monitoreo import registrar  # noqa: E402
 COLORES = {"negativo": "#e4572e", "neutral": "#9aa0a6", "positivo": "#29a35a"}
 ORDEN = ["negativo", "neutral", "positivo"]
 
-st.set_page_config(page_title="Evaluación docente · Polaridad", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="Evaluación docente: Polaridad", layout="wide")
 
 
-@st.cache_resource(show_spinner="Cargando modelo…")
+@st.cache_resource(show_spinner="Cargando modelo...")
 def modelo():
     return cargar_modelo(DEFAULT_VERSION)
 
@@ -32,14 +32,14 @@ with st.sidebar:
     c1, c2 = st.columns(2)
     c1.metric("macro-F1 test", f"{meta['macro_f1_test']:.3f}")
     c2.metric("Accuracy test", f"{meta['accuracy_test']:.3f}")
-    st.caption(f"Entrenado con {meta['n_train']} comentarios · scikit-learn {meta['scikit_learn']}")
+    st.caption(f"Entrenado con {meta['n_train']} comentarios, scikit-learn {meta['scikit_learn']}")
     st.divider()
     st.caption("Herramienta de apoyo: los casos de baja confianza requieren revisión manual. Los comentarios no deben contener datos personales.")
 
-st.title("🎓 Clasificador de comentarios de evaluación docente")
+st.title("Clasificador de comentarios de evaluación docente")
 st.write("Clasifica comentarios de estudiantes en **negativo**, **neutral** o **positivo**.")
 
-tab1, tab2 = st.tabs(["✍️ Comentario individual", "📄 Archivo CSV"])
+tab1, tab2 = st.tabs(["Comentario individual", "Archivo CSV"])
 
 with tab1:
     texto = st.text_area("Comentario", height=140,
@@ -70,7 +70,7 @@ with tab2:
         cols = list(df.columns)
         col = st.selectbox("Columna con el texto", cols, index=cols.index("feedback") if "feedback" in cols else 0)
         if st.button("Clasificar archivo", type="primary"):
-            with st.spinner(f"Clasificando {len(df)} comentarios…"):
+            with st.spinner(f"Clasificando {len(df)} comentarios..."):
                 res = predecir(df[col].tolist())
                 registrar(res)
             df["polaridad_predicha"] = [r["polaridad"] for r in res]
@@ -94,5 +94,5 @@ with tab2:
                              color=[COLORES[c] for c in ORDEN])
             st.subheader("Resultados")
             st.dataframe(df, use_container_width=True, height=360)
-            st.download_button("⬇️ Descargar resultados (CSV)", df.to_csv(index=False).encode("utf-8-sig"),
+            st.download_button("Descargar resultados (CSV)", df.to_csv(index=False).encode("utf-8-sig"),
                                "comentarios_clasificados.csv", "text/csv")
