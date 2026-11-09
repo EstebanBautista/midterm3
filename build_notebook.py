@@ -16,7 +16,7 @@ En este notebook se evalúa un modelo inicial de Machine Learning que clasifica 
 """)
 
 code(r"""
-import ast, json, re, sys, time, unicodedata, warnings
+import ast, hashlib, json, re, sys, time, unicodedata, warnings
 from pathlib import Path
 
 import joblib
@@ -341,7 +341,11 @@ meta = {"version": "v1", "representacion": mejor_key[0], "modelo": mejor_key[1],
         "macro_f1_test": round(float(f1_score(y_test, y_pred, average="macro")), 4),
         "accuracy_test": round(float(accuracy_score(y_test, y_pred)), 4),
         "n_train": int(len(X_train)), "n_test": int(len(X_test)), "clases": ORDEN,
-        "dataset": [f.name for f in archivos], "python": sys.version.split()[0],
+        "dataset": [f.name for f in archivos],
+        "dataset_sha256": {f.name: hashlib.sha256(b"".join(f.read_bytes().splitlines())).hexdigest() for f in archivos},
+        "referencia": {"proporcion_clases": {c: round(float((y_train == c).mean()), 4) for c in ORDEN},
+                       "longitud_media": round(float(np.mean([len(t) for t in X_train])), 1)},
+        "python": sys.version.split()[0],
         "scikit_learn": sklearn.__version__, "embeddings": EMB_NAME if mejor_key[0] != "TF-IDF" else None}
 (MODEL_DIR / "modelo_polaridad_v1.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 print(json.dumps(meta, indent=2, ensure_ascii=False))

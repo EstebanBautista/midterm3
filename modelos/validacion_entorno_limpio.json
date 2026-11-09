@@ -1,0 +1,51 @@
+{
+  "fecha": "2026-11-09",
+  "python": "3.12.10",
+  "scikit_learn": "1.9.1",
+  "pruebas": "8 passed in 21.70s",
+  "pruebas_correctas": true,
+  "predicciones_coinciden": true,
+  "predicciones": [
+    {
+      "comentario": "El profesor explica muy bien y siempre resuelve dudas.",
+      "polaridad": "neutral",
+      "probabilidades": {
+        "negativo": 0.101,
+        "neutral": 0.5904,
+        "positivo": 0.3086
+      }
+    },
+    {
+      "comentario": "Los parciales no tienen nada que ver con lo visto en clase, muy desorganizado.",
+      "polaridad": "negativo",
+      "probabilidades": {
+        "negativo": 0.7766,
+        "neutral": 0.2018,
+        "positivo": 0.0217
+      }
+    },
+    {
+      "comentario": "El curso estuvo bien, normal.",
+      "polaridad": "neutral",
+      "probabilidades": {
+        "negativo": 0.005,
+        "neutral": 0.719,
+        "positivo": 0.2759
+      }
+    },
+    {
+      "comentario": "Buen contenido, aunque los parciales fueron injustos.",
+      "polaridad": "negativo",
+      "probabilidades": {
+        "negativo": 0.5159,
+        "neutral": 0.342,
+        "positivo": 0.1421
+      }
+    },
+    {
+      "comentario": "",
+      "polaridad": null,
+      "probabilidades": null
+    }
+  ]
+}

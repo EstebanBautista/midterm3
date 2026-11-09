@@ -20,6 +20,19 @@
     "feedback_curso_universitario2.csv",
     "feedback_curso_universitario3.csv"
   ],
+  "dataset_sha256": {
+    "feedback_curso_universitario.csv": "04cf739b322ed41985c23161470f91ec64c9d6c04754d74312593a60c589b822",
+    "feedback_curso_universitario2.csv": "efdc69c59e7ca75ff37c726c913062c734b59877890c1002e59a12c23601015a",
+    "feedback_curso_universitario3.csv": "52c8d7d7cc963a0366237c18a40b852f639e15587254bb41b245ed935c6ec89f"
+  },
+  "referencia": {
+    "proporcion_clases": {
+      "negativo": 0.3327,
+      "neutral": 0.4199,
+      "positivo": 0.2475
+    },
+    "longitud_media": 286.4
+  },
   "python": "3.12.10",
   "scikit_learn": "1.9.1",
   "embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
