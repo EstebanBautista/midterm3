@@ -23,7 +23,7 @@ def test_prediccion_valida():
 
 
 def test_entradas_invalidas():
-    r = predecir(["", "   ", None, "x" * 6000])
+    r = predecir(["", "   ", None, float("nan"), "x" * 6000])
     assert all(not x["valido"] for x in r)
 
 

@@ -46,7 +46,8 @@ def predecir(textos, version: str = DEFAULT_VERSION):
     resultados = [None] * len(textos)
     validos = []
     for i, t in enumerate(textos):
-        t = "" if t is None else str(t)
+        # una celda vacía de un CSV llega como NaN y str(NaN) sería el texto "nan"
+        t = "" if t is None or (isinstance(t, float) and np.isnan(t)) else str(t)
         if not t.strip():
             resultados[i] = {"texto": t, "polaridad": None, "confianza": None, "probabilidades": None,
                              "valido": False, "error": "Comentario vacío"}
