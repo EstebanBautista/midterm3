@@ -78,6 +78,18 @@ La respuesta incluye `polaridad`, `confianza`, `probabilidades` (una por clase) 
   - **Actualización:** se entrena, se guarda una nueva versión `vN+1` y se cambia `DEFAULT_VERSION` en `src/modelo.py`.
   - **Reversión:** se vuelve a poner en `DEFAULT_VERSION` la versión anterior.
 
+## Seguridad y monitoreo de la API
+
+| Variable de entorno | Efecto |
+|---|---|
+| `API_KEY` | Si está definida, `/predict`, `/predict/batch` y `/monitoreo` exigen el encabezado `X-API-Key`. Debe definirse al desplegar. |
+| `RATE_LIMIT_POR_MINUTO` | Peticiones por minuto de cada IP, 60 por defecto. Por encima responde HTTP 429. |
+| `MONITOREO_RUTA` | Archivo del registro, por defecto `monitoreo/predicciones.jsonl`. Al desplegar debe apuntar a un disco persistente. |
+
+El registro guarda clase, confianza y longitud de cada predicción, y nunca el texto del comentario. `GET /monitoreo` compara las últimas 1000 predicciones con la referencia de entrenamiento guardada en el `.json` del modelo, y devuelve alertas desde 30 predicciones.
+
+`scripts/validar_entorno_limpio.py` instala `requirements.txt` en un entorno temporal, corre las pruebas, compara las predicciones y deja la evidencia en `modelos/validacion_entorno_limpio.json`.
+
 ## Uso de LLM
 
-Se utilizaron LLM como apoyo en la exploración de datos, el preprocesamiento y el análisis de errores; las decisiones fueron revisadas por los integrantes.
+Se utilizó Claude Opus 5.5, con nivel de esfuerzo medio, como apoyo en la exploración de datos, el preprocesamiento y el análisis de errores; las decisiones fueron revisadas por los integrantes.

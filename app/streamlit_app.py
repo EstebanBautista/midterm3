@@ -11,6 +11,7 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.modelo import DEFAULT_VERSION, cargar_modelo, predecir  # noqa: E402
+from src.monitoreo import registrar  # noqa: E402
 
 COLORES = {"negativo": "#e4572e", "neutral": "#9aa0a6", "positivo": "#29a35a"}
 ORDEN = ["negativo", "neutral", "positivo"]
@@ -45,6 +46,7 @@ with tab1:
                          placeholder="Ej.: El profesor explica muy bien, pero los parciales fueron demasiado difíciles.")
     if st.button("Clasificar", type="primary"):
         r = predecir([texto])[0]
+        registrar([r])
         if not r["valido"]:
             st.warning(r["error"])
         else:
@@ -70,6 +72,7 @@ with tab2:
         if st.button("Clasificar archivo", type="primary"):
             with st.spinner(f"Clasificando {len(df)} comentarios…"):
                 res = predecir(df[col].tolist())
+                registrar(res)
             df["polaridad_predicha"] = [r["polaridad"] for r in res]
             df["confianza"] = [r["confianza"] for r in res]
             n_inv = sum(not r["valido"] for r in res)
