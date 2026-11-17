@@ -9,6 +9,20 @@ Este proyecto clasifica comentarios abiertos de estudiantes sobre la docencia co
 - **Midterm 3:** construye y evalúa el modelo (notebook) y lo reporta en un artículo con la plantilla de la revista *Ingeniería y Universidad*.
 - **Proyecto final:** integra el modelo en un producto mínimo viable (MVP), con un servicio FastAPI y una aplicación Streamlit.
 
+**Aplicación desplegada:** https://midterm3-dltumjsyhdwzjznttqrf4b.streamlit.app
+
+## Despliegue
+
+La aplicación está en Streamlit Community Cloud, desplegada desde `app/streamlit_app.py` con Python 3.12. Streamlit Cloud usa `app/requirements.txt`, que instala torch de CPU. El plan gratuito solo publica la aplicación, así que la API se ejecuta en local.
+
+`deploy/Dockerfile` sirve cualquiera de los dos servicios en un servidor con Docker. Se probó en Linux con la app y la API.
+
+```bash
+docker build -f deploy/Dockerfile -t set-polaridad .
+docker run -p 8501:7860 set-polaridad                    # aplicación
+docker run -p 8000:7860 -e SERVICIO=api set-polaridad    # API, documentación en /docs
+```
+
 ## Resultados (conjunto de prueba, n = 124)
 
 | Modelo | macro-F1 CV | macro-F1 prueba | Exactitud prueba |
