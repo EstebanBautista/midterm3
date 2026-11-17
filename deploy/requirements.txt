@@ -1,0 +1,12 @@
+# Solo lo necesario para servir el modelo. Mismas versiones que requirements.txt.
+scikit-learn==1.9.1
+pandas==3.1.1
+numpy==2.5.4
+joblib==1.6.0
+sentence-transformers==6.2.0
+transformers==5.22.2
+fastapi==0.162.2
+uvicorn[standard]==0.54.0
+pydantic==2.14.3
+python-multipart==0.0.33
+streamlit==1.67.0
